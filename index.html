@@ -1,17 +1,90 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>تسجيل دخول الموظف</title>
-<link rel="manifest" href="manifest.json">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام تسجيل الطلبة</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; color: #333; }
+    .header { background: white; padding: 15px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display:flex; justify-content: space-between; align-items:center; margin-bottom:30px; border-radius:8px; }
+    .logo { font-size:24px; font-weight:bold; color:#3498db; }
+    .user-info { display:flex; align-items:center; }
+    .welcome { margin-right:15px; }
+    .logout-btn { background:#e74c3c; color:white; padding:8px 15px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; }
+    .container { max-width:1000px; margin:0 auto; }
+    .card { background:white; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.1); padding:25px; margin-bottom:25px; }
+    h1 { color:#2c3e50; border-bottom:2px solid #3498db; padding-bottom:10px; margin-top:0; }
+    .form-group { margin-bottom:20px; }
+    label { display:block; margin-bottom:8px; font-weight:bold; color:#2c3e50; }
+    input, select { width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-size:16px; box-sizing:border-box; }
+    input:focus, select:focus { border-color:#3498db; outline:none; box-shadow:0 0 5px rgba(52,152,219,0.5); }
+    input[readonly] { background-color:#f5f5f5; cursor:not-allowed; }
+    button { background: linear-gradient(to right,#3498db,#2c3e50); color:white; padding:14px; border:none; border-radius:6px; cursor:pointer; font-size:16px; width:100%; font-weight:bold; margin-top:10px; }
+    button.secondary { background: linear-gradient(to right,#95a5a6,#7f8c8d); }
+    .message { padding:12px; border-radius:5px; margin-top:15px; text-align:center; display:none; }
+    .error { background-color:#fadbd8; color:#e74c3c; }
+    .success { background-color:#d5f5e3; color:#27ae60; }
+    .info { background-color:#d6eaf8; color:#3498db; }
+    .search-result { display:none; margin-top:20px; }
+    .student-info { background-color:#f8f9fa; padding:20px; border-radius:6px; border-left:4px solid #3498db; }
+    .student-field { margin-bottom:10px; display:flex; }
+    .student-field label { width:180px; margin-bottom:0; color:#7f8c8d; }
+    .student-field span { font-weight:bold; }
+    .two-columns { display:flex; gap:20px; }
+    .two-columns > div { flex:1; }
+    @media (max-width:768px){ .two-columns { flex-direction:column; } }
+  </style>
 </head>
 <body>
-<h2>تسجيل الدخول</h2>
-<input type="text" id="username" placeholder="اسم المستخدم"><br>
-<input type="password" id="password" placeholder="كلمة المرور"><br>
-<button onclick="login()">دخول</button>
-<p id="msg"></p>
+  <div class="header">
+    <div class="logo">نظام تسجيل الطلبة</div>
+    <div class="user-info">
+      <div class="welcome">مرحباً، <span id="userDisplayName">مستخدم</span></div>
+      <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+    </div>
+  </div>
 
-<script src="app.js"></script>
+  <div class="container">
+    <!-- البحث عن الطالب -->
+    <div class="card">
+      <h1>البحث عن بيانات الطالب</h1>
+      <div class="form-group">
+        <label for="idNumber">رقم الهوية:</label>
+        <input type="text" id="idNumber" placeholder="أدخل رقم الهوية للبحث">
+      </div>
+      <button onclick="searchStudent()">بحث</button>
+      <div id="searchMessage" class="message"></div>
+      <div id="searchResult" class="search-result">
+        <h2>نتيجة البحث:</h2>
+        <div id="studentInfo" class="student-info"></div>
+      </div>
+    </div>
+
+    <!-- تعديل البيانات -->
+    <div class="card">
+      <h1>تعديل بيانات الطالب</h1>
+      <div class="two-columns">
+        <div>
+          <div class="form-group"><label for="fullName">اسم الطالب:</label><input type="text" id="fullName"></div>
+          <div class="form-group"><label for="motherName">اسم الأم:</label><input type="text" id="motherName"></div>
+          <div class="form-group"><label for="birthDate">تاريخ الميلاد:</label><input type="date" id="birthDate"></div>
+          <div class="form-group"><label for="gender">الجنس:</label><select id="gender"><option value="">اختر</option><option value="ذكر">ذكر</option><option value="أنثى">أنثى</option></select></div>
+          <div class="form-group"><label for="guardianName">اسم ولي الأمر:</label><input type="text" id="guardianName"></div>
+        </div>
+        <div>
+          <div class="form-group"><label for="idNumber2">رقم الهوية:</label><input type="text" id="idNumber2" readonly></div>
+          <div class="form-group"><label for="individualRegistrationNumber">رقم التسجيل الفردي:</label><input type="text" id="individualRegistrationNumber"></div>
+          <div class="form-group"><label for="familyRegistrationNumber">رقم التسجيل العائلي:</label><input type="text" id="familyRegistrationNumber"></div>
+          <div class="form-group"><label for="phone1">رقم الجوال:</label><input type="tel" id="phone1"></div>
+          <div class="form-group"><label for="area">المنطقة:</label><select id="area" onchange="updateSchools()"><option value="">اختر المنطقة</option><option value="شمال رفح">شمال رفح</option><option value="جنوب رفح">جنوب رفح</option></select></div>
+          <div class="form-group"><label for="desiredSchool">المدرسة المرغوبة:</label><select id="desiredSchool"><option value="">اختر المدرسة</option></select></div>
+        </div>
+      </div>
+      <button onclick="saveStudent()">حفظ البيانات</button>
+      <div id="saveMessage" class="message"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
