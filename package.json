@@ -1,0 +1,17 @@
+{
+  "name": "StudentRS",
+  "version": "1.0.0",
+  "description": "Test scripts for StudentRS Google Apps Script API",
+  "main": "testLogin.js",
+  "type": "module",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "scripts": {
+    "login": "node testLogin.js",
+    "getStudent": "node testGetStudent.js",
+    "saveStudent": "node testSaveStudent.js"
+  },
+  "author": "Marwan Abu-Zaid",
+  "license": "MIT"
+}
