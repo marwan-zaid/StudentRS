@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام تسجيل الطلبة - تسجيل الدخول</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 450px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 15px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    input:focus {
+      border-color: #3498db;
+      outline: none;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    }
+    button {
+      background: linear-gradient(to right, #3498db, #2c3e50);
+      color: white;
+      padding: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .error {
+      color: #e74c3c;
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #fadbd8;
+      border-radius: 5px;
+      text-align: center;
+      display: none;
+    }
+    .success {
+      color: #27ae60;
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #d5f5e3;
+      border-radius: 5px;
+      text-align: center;
+      display: none;
+    }
+    .info {
+      color: #3498db;
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #d6eaf8;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .logo {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #3498db;
+      margin-bottom: 10px;
+    }
+    .help-text {
+      text-align: center;
+      color: #7f8c8d;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">نظام تسجيل الطلبة</div>
+    <h1>تسجيل الدخول</h1>
+    
+    <div class="form-group">
+      <label for="username">اسم المستخدم:</label>
+      <input type="text" id="username" required placeholder="أدخل اسم المستخدم">
+    </div>
+    
+    <div class="form-group">
+      <label for="password">كلمة المرور:</label>
+      <input type="password" id="password" required placeholder="أدخل كلمة المرور">
+    </div>
+    
+    <button onclick="login()">تسجيل الدخول</button>
+    
+    <div id="loginMessage" class="error"></div>
+    
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>جاري تسجيل الدخول...</p>
+    </div>
+    
+    <div class="help-text">
+      إذا استمرت المشكلة، يرجى الاتصال بمدير النظام.
+    </div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/XXXX/exec"; // ضع رابط الـ Web App هنا
+    
+    // تسجيل الدخول
+    async function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const messageDiv = document.getElementById('loginMessage');
+      const loadingDiv = document.getElementById('loading');
+      
+      if (!username || !password) {
+        showError('يرجى إدخال اسم المستخدم وكلمة المرور');
+        return;
+      }
+      
+      // إخفاء الرسائل السابقة وإظهار مؤشر التحميل
+      messageDiv.style.display = 'none';
+      loadingDiv.style.display = 'block';
+      
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'authenticate',
+            username: username,
+            password: password
+          })
+        });
+        
+        const data = await response.json();
+        loadingDiv.style.display = 'none';
+        
+        if (data.success) {
+          showMessage('تم تسجيل الدخول بنجاح! جاري التوجيه...', 'success');
+          
+          // تخزين معلومات المستخدم في التخزين المؤقت للجلسة
+          sessionStorage.setItem('user', JSON.stringify({
+            username: username,
+            full_name: data.full_name || username
+          }));
+          
+          // الانتقال إلى الصفحة الرئيسية بعد تأخير بسيط
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+        } else {
+          showError(data.message || 'اسم المستخدم أو كلمة المرور غير صحيحة');
+        }
+      } catch (error) {
+        loadingDiv.style.display = 'none';
+        showError('حدث خطأ في الاتصال: ' + error.message);
+      }
+    }
+    
+    // عرض رسالة الخطأ
+    function showError(message) {
+      const messageDiv = document.getElementById('loginMessage');
+      messageDiv.textContent = message;
+      messageDiv.className = 'error';
+      messageDiv.style.display = 'block';
+    }
+    
+    // عرض رسالة معلومات
+    function showMessage(message, type) {
+      const messageDiv = document.getElementById('loginMessage');
+      messageDiv.textContent = message;
+      messageDiv.className = type;
+      messageDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
