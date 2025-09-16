@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>تعديل بيانات الطالب</title>
+</head>
+<body>
+<h2>تعديل بيانات الطالب</h2>
+<label>رقم الهوية (غير قابل للتعديل)</label>
+<input type="text" id="studentId" disabled><br>
+<label>اسم الطالب</label>
+<input type="text" id="اسم_الطالب"><br>
+<label>اسم الأم</label>
+<input type="text" id="اسم_الأم"><br>
+<label>تاريخ الميلاد</label>
+<input type="date" id="تاريخ_الميلاد"><br>
+<!-- أضف باقي الحقول حسب Sheet3 -->
+<label>رقم الهاتف</label>
+<input type="text" id="رقم_الواتس_بالمقدمة"><br>
+<label>المنطقة</label>
+<input type="text" id="المنطقة"><br>
+
+<button onclick="saveStudent()">حفظ</button>
+<p id="status"></p>
+</body>
+<script src="app.js"></script>
+</html>
