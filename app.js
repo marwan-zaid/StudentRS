@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/XXXX/exec"; // ضع رابط Apps Script
+const API_URL = "https://script.google.com/macros/s/AKfycby5T3N60TKxmq0NJrubB_dZk8xu-ZPCIosT8fkwQdECLKLwV3Gq1JRvnwm-ERfT43YO/exec"; // ضع رابط Apps Script
 
 // تسجيل الدخول
 async function login(){
